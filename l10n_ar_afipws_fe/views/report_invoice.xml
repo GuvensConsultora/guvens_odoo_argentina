@@ -10,9 +10,13 @@
 		</xpath>
 	</template>
 
-	   <template id="qr_report_invoice_document" inherit_id="account.report_invoice_document">
+	   <!-- Por qué: Heredamos de l10n_ar en lugar de account para respetar la cadena
+	        Patrón: Herencia respetando módulos core de localización
+	        Tip: Siempre heredar del template de localización, no del core directamente -->
+	   <template id="qr_report_invoice_document" inherit_id="l10n_ar.report_invoice_document">
 		<xpath expr="//div[@id='qrcode']" position="replace">
-	            <div class="footer" style="border: 1px solid black;" height="150px">
+	            <!-- Por qué: Mantenemos id="qrcode" para que l10n_ar pueda agregar contenido después -->
+	            <div id="qrcode" class="footer" style="border: 1px solid black;" height="150px">
 	              <div class="row" style="margin-bottom: 0px !important; padding-top: 3px; padding-bottom: 3px;">
         	        <div class="col-4" t-if="o.afip_cae">
                 	    <p/>
