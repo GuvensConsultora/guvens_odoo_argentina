@@ -2,24 +2,24 @@
 <odoo>
 	<data>
 
-	   <template id="qr_report_invoice_document" inherit_id="account.report_invoice_document">
-		<xpath expr="//div[@id='qrcode']" position="replace">
-	            <div class="footer" style="border: 1px solid black;">
-	              <div class="row" style="margin-bottom: 0px !important; padding-top: 3px; padding-bottom: 3px;">
-        	        <div class="col-4" t-if="o.afip_cae">
-                	    <p/>
-	                    <p><strong> CAE: </strong><span t-field="o.afip_cae"/></p>
-        	            <p><strong> Fecha Vencimiento CAE: </strong><span t-field="o.afip_cae_due"/></p>
-		    	</div> <!-- cierra col-4 -->
-                	<div class="col-2" t-if="o.texto_modificado_qr">
-	                    <p/>
-        	            <strong>Codigo QR: </strong>
-		    	</div> <!-- cierra col-2 -->
-	                <div class="col-6" t-if="o.texto_modificado_qr">
-                	  <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', o.texto_modificado_qr, 180, 180)" style="width:185px;height:185px"/>
-			</div> <!-- cierra col-6 -->
-		     </div> <!-- cierra row -->
-		  </div> <!-- cierra el footer -->
+	   <!-- Por qué: Cambiamos el ID y el inherit_id para evitar conflicto con l10n_ar_afipws_fe
+	        Patrón: Herencia en cascada - heredamos del template ya customizado por l10n_ar_afipws_fe
+	        Tip: Cuando dos módulos modifican el mismo template, el segundo debe heredar del primero
+	        Alternativa: Si este módulo no aporta funcionalidad adicional, desinstalarlo -->
+	   <template id="qr_fe_custom_invoice_document" inherit_id="l10n_ar_afipws_fe.qr_report_invoice_document">
+		<!-- Por qué: Reemplazamos las secciones de QR para usar texto_modificado_qr (URL de AFIP)
+		          en lugar de qr_code (imagen precalculada) -->
+		<xpath expr="//div[@class='col-2'][@t-if='o.qr_code']" position="replace">
+               	<div class="col-2" t-if="o.texto_modificado_qr">
+                    <p/>
+       	            <strong>Codigo QR: </strong>
+	    	</div>
+		</xpath>
+
+		<xpath expr="//div[@class='col-6'][@t-if='o.qr_code']" position="replace">
+                <div class="col-6" t-if="o.texto_modificado_qr">
+               	  <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', o.texto_modificado_qr, 180, 180)" style="width:185px;height:185px"/>
+		</div>
 		</xpath>
 	    </template>
 
